@@ -1,0 +1,7 @@
+FROM ubuntu:yakkety
+
+MAINTAINER Nicolas Mendoza <mendoza@pvv.ntnu.no>
+
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y perl-modules libmodule-install-perl make build-essential libtap-harness-archive-perl fakeroot debhelper dh-make-perl apt-file libmodule-build-perl
+
+RUN echo "builder-yakkety" > /etc/mailname

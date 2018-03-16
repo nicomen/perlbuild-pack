@@ -1,0 +1,12 @@
+
+#!/bin/bash
+
+set -x
+
+TAG=${1-nicomen/perlbuild-pack}
+DOCKERFILE=${2-Dockerfile}
+
+docker build -t $TAG -f $DOCKERFILE . && \
+docker login && \
+docker push $TAG
+

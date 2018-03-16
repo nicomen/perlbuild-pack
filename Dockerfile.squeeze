@@ -1,0 +1,21 @@
+FROM debian/eol:squeeze
+
+MAINTAINER Nicolas Mendoza <mendoza@pvv.ntnu.no>
+
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y perl-modules libmodule-install-perl make build-essential fakeroot debhelper dh-make-perl apt-file libmodule-build-perl libcpan-meta-perl
+
+RUN echo "builder-squeeze" > /etc/mailname
+
+#RUN dh-make-perl --core-ok --packagename cpan-libcpan-meta-perl --cpan CPAN::Meta \
+# && ls -lR ../ && dpkg -i cpan-libcpan-meta*.deb
+
+RUN mkdir /var/cache/apt/archives/build && cd /var/cache/apt/archives/build \
+ && export PERL_MM_OPT="INSTALLDIRS=site" && export BUILDING_AS_PACKAGE=1 \
+ && curl http://www.cpan.org/authors/id/M/MS/MSTROUT/ExtUtils-MakeMaker-6.59.tar.gz > ExtUtils-MakeMaker-6.59.tar.gz \
+ && tar xzvf ExtUtils-MakeMaker-6.59.tar.gz \
+ && (cd ExtUtils-MakeMaker-6.59 && dh-make-perl --core-ok --packagename cpan-libextutils-makemaker-perl \
+     && (echo override_dh_usrlocal: >> debian/rules) && debian/rules binary) \
+ && dpkg -i cpan-libextutils-makemaker-perl*.deb
+
+RUN dh-make-perl --core-ok --packagename cpan-libtap-harness-archive-perl --cpan TAP::Harness::Archive \
+ && dpkg -i cpan-libtap-harness-archive-perl*.deb

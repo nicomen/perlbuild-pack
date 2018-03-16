@@ -1,0 +1,9 @@
+Make sure you have docker installed and have a username, and are part of the FOO organization. Ask ops.
+
+Generate images and deploy images like this:
+
+./build-docker-images FOO/builder:wheezy ./Dockerfile.wheezy
+
+./build-docker-images FOO/builder:jessie ./Dockerfile.jessie
+
+etc

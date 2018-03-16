@@ -1,0 +1,15 @@
+FROM ubuntu:trusty
+
+MAINTAINER Nicolas Mendoza <mendoza@pvv.ntnu.no>
+
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y perl-modules libmodule-install-perl make build-essential libtap-harness-archive-perl fakeroot debhelper dh-make-perl apt-file libmodule-build-perl
+
+RUN echo "builder-trusty" > /etc/mailname
+
+RUN mkdir /var/cache/apt/archives/build && cd /var/cache/apt/archives/build \
+ && export PERL_MM_OPT="INSTALLDIRS=site" && export BUILDING_AS_PACKAGE=1 \
+ && dh-make-perl --core-ok --packagename cpan-libextutils-makemaker-perl --cpan ExtUtils::MakeMaker \
+ && (cd cpan-libextutils-makemaker-perl && (echo override_dh_usrlocal: >> debian/rules) && perl -p -i -e 's/EXE_FILES.*$//' Makefile.PL && debian/rules binary ) \
+ && dpkg -i cpan-libextutils-makemaker-perl*.deb
+
+RUN echo "man-db man-db/auto-update boolean false" | debconf-set-selections

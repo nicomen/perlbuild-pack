@@ -1,0 +1,20 @@
+FROM ubuntu:precise
+
+MAINTAINER Nicolas Mendoza <mendoza@pvv.ntnu.no>
+
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y perl-modules libmodule-install-perl make build-essential libtap-harness-archive-perl fakeroot debhelper dh-make-perl apt-file libmodule-build-perl
+
+RUN echo "builder-precise" > /etc/mailname
+
+RUN mkdir /var/cache/apt/archives/build && cd /var/cache/apt/archives/build \
+ && mkdir -p /usr/local/share/perl/5.14.2 /usr/local/lib/perl/5.14.2 \
+ && cpan ExtUtils::MakeMaker || true
+
+#RUN (cd /var/cache/apt/archives/build/ && tar xzvf ExtUtils* && cd ExtUtils* && export DEB_BUILD_OPTIONS=nocheck && export PERL_MM_OPT="INSTALLDIRS=site" && export BUILDING_AS_PACKAGE=1  && dh-make-perl --notest --core-ok --packagename cpan-libextutils-makemaker-perl && (echo override_dh_usrlocal: >> debian/rules) && debian/rules binary )
+
+#RUN cd /var/cache/apt/archives/build && dpkg -i cpan-libextutils-makemaker-perl*.deb
+
+RUN echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+
+ENV TZ=Europe/Oslo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

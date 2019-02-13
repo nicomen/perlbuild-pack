@@ -18,3 +18,5 @@ RUN echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 
 ENV TZ=Europe/Oslo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN locale-gen en_US.UTF-8
+ENV LC_ALL en_US.UTF-8

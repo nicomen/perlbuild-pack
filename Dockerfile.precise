@@ -18,5 +18,6 @@ RUN echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 
 ENV TZ=Europe/Oslo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN ln -sf /usr/lib/x86_64-linux-gnu/libodbc.so.1 /usr/lib/x86_64-linux-gnu/libodbc.so.1.0.0 # unixodbc-dev has broken default symlinks
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL en_US.UTF-8

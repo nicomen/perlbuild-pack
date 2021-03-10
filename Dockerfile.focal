@@ -1,0 +1,17 @@
+FROM ubuntu:focal
+
+MAINTAINER Nicolas Mendoza <mendoza@pvv.ntnu.no>
+
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y perl-modules libmodule-install-perl make build-essential libtap-harness-archive-perl fakeroot debhelper dh-make-perl apt-file libmodule-build-perl
+
+RUN echo "builder-bionic" > /etc/mailname
+
+RUN echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+
+ENV TZ=Europe/Oslo
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y tzdata
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get install -y locales
+RUN locale-gen en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
